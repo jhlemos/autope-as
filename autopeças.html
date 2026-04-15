@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Peças do Joazinho</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Cabeçalho */
+        .header {
+            background: #111111;
+            border-bottom: 3px solid #ffffff;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Times New Roman', serif;
+            font-size: 2rem;
+        }
+
+        .header p {
+            font-family: sans-serif;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Navegação */
+        .nav {
+            background: #0a0a0a;
+            padding: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav button {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 0.5rem 1.5rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            font-family: sans-serif;
+            border-radius: 4px;
+        }
+
+        .nav button:hover {
+            background: white;
+            color: black;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 60vh;
+        }
+
+        /* Páginas */
+        .pagina {
+            display: none;
+        }
+
+        .pagina.ativa {
+            display: block;
+        }
+
+        /* Saudação */
+        .saudacao {
+            background: #111111;
+            border: 1px solid #333;
+            text-align: center;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        /* Grade de produtos */
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .produto-card {
+            background: #111111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .produto-card:hover {
+            border-color: #fff;
+        }
+
+        .icone {
+            font-size: 2.5rem;
+        }
+
+        .tipo {
+            font-size: 0.7rem;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .nome {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .preco {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #00ff00;
+            margin: 0.5rem 0;
+        }
+
+        button {
+            background: white;
+            color: black;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 0.2rem;
+        }
+
+        button:hover {
+            background: #333;
+            color: white;
+        }
+
+        /* Formulário de cadastro */
+        .form-cadastro {
+            background: #111111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.7rem;
+            background: black;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 4px;
+        }
+
+        /* Carrinho */
+        .carrinho-items {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .carrinho-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111111;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .total-carrinho {
+            text-align: right;
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-top: 2px solid white;
+        }
+
+        .btn-finalizar {
+            background: #25D366;
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Rodapé */
+        .footer {
+            background: #111111;
+            border-top: 2px solid #ffffff;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .produtos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Cabeçalho -->
+<header class="header">
+    <h1>🚗 AUTO PEÇAS DO JOAZINHO</h1>
+    <p>📍 Cianorte, PR | Peças originais com preço honesto</p>
+</header>
+
+<!-- Navegação -->
+<div class="nav">
+    <button onclick="mostrarPagina('loja')">🏪 LOJA</button>
+    <button onclick="mostrarPagina('cadastro')">📝 CADASTRAR PEÇA</button>
+    <button onclick="mostrarPagina('carrinho')">🛒 CARRINHO (<span id="carrinhoCount">0</span>)</button>
+</div>
+
+<!-- Container principal -->
+<main class="container">
+    <!-- Página da Loja -->
+    <div id="paginaLoja" class="pagina ativa">
+        <div class="saudacao">
+            <h2>👋 E aí, parceiro!</h2>
+            <p>Escolha as peças, adicione no carrinho e fecha com o Joazinho!</p>
+        </div>
+        <div id="produtosGrid" class="produtos-grid">
+            <!-- Produtos serão carregados aqui via JS -->
+        </div>
+    </div>
+
+    <!-- Página de Cadastro -->
+    <div id="paginaCadastro" class="pagina">
+        <div class="form-cadastro">
+            <h2 style="margin-bottom: 1.5rem;">📝 CADASTRAR NOVA PEÇA</h2>
+            <form id="formCadastro">
+                <div class="form-group">
+                    <label>TIPO DA PEÇA</label>
+                    <select id="tipo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Motor">⚙️ Motor</option>
+                        <option value="Freios">🛑 Freios</option>
+                        <option value="Suspensão">🔩 Suspensão</option>
+                        <option value="Rodagem">🛞 Rodagem</option>
+                        <option value="Lubrificantes">🛢️ Lubrificantes</option>
+                        <option value="Filtros">🔧 Filtros</option>
+                        <option value="Iluminação">💡 Iluminação</option>
+                        <option value="Elétrica">🔋 Elétrica</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>NOME DA PEÇA</label>
+                    <input type="text" id="nome" placeholder="Ex: Vela de Ignição" required>
+                </div>
+                <div class="form-group">
+                    <label>DESCRIÇÃO</label>
+                    <input type="text" id="descricao" placeholder="Ex: Original - Alto desempenho" required>
+                </div>
+                <div class="form-group">
+                    <label>PREÇO (R$)</label>
+                    <input type="number" id="preco" step="0.01" placeholder="0,00" required>
+                </div>
+                <div class="form-group">
+                    <label>ÍCONE (emojis)</label>
+                    <input type="text" id="icone" placeholder="Ex: ⚙️, 🛑, 🔩" value="🔧">
+                </div>
+                <button type="submit">💾 CADASTRAR PEÇA</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Página do Carrinho -->
+    <div id="paginaCarrinho" class="pagina">
+        <div class="saudacao">
+            <h2>🛒 SEU CARRINHO</h2>
+            <p>Revise seus itens e finalize o pedido</p>
+        </div>
+        <div id="carrinhoItems" class="carrinho-items">
+            <p style="text-align:center;">Carrinho vazio</p>
+        </div>
+        <div id="totalCarrinho" class="total-carrinho">Total: R$ 0,00</div>
+        <button class="btn-finalizar" onclick="finalizarPedido()">📲 FINALIZAR PEDIDO NO WHATSAPP</button>
+        <button onclick="limparCarrinho()" style="margin-top: 1rem; background:#333;">🗑️ LIMPAR CARRINHO</button>
+    </div>
+</main>
+
+<!-- Rodapé -->
+<footer class="footer">
+    <p>Auto Peças do Joazinho — Tradição e confiança em cada peça</p>
+    <p>📞 (44) 99936-4735 | 🕗 Seg-sex 8h-18h | Sáb 8h-12h</p>
+</footer>
+
+<script>
+    // Produtos padrão
+    let produtos = [
+        { id: 1, tipo: "Motor", nome: "Vela de Ignição", descricao: "Original - Alto desempenho", preco: 50, icone: "⚙️" },
+        { id: 2, tipo: "Freios", nome: "Pastilha de Freio", descricao: "Cerâmica - Durabilidade", preco: 90, icone: "🛑" },
+        { id: 3, tipo: "Suspensão", nome: "Amortecedor", descricao: "Conforto e segurança", preco: 250, icone: "🔩" },
+        { id: 4, tipo: "Rodagem", nome: "Pneu Aro 14", descricao: "Radial - Custo-benefício", preco: 209.99, icone: "🛞" },
+        { id: 5, tipo: "Lubrificantes", nome: "Óleo do Motor", descricao: "Semi-sintético 5W30", preco: 45, icone: "🛢️" },
+        { id: 6, tipo: "Filtros", nome: "Filtro de Óleo", descricao: "Original - Motor limpo", preco: 25, icone: "🔧" },
+        { id: 7, tipo: "Iluminação", nome: "Lâmpada Farol", descricao: "LED Super branco", preco: 35, icone: "💡" },
+        { id: 8, tipo: "Motor", nome: "Correia Dentada", descricao: "Original - Durabilidade", preco: 120, icone: "⛓️" },
+        { id: 9, tipo: "Elétrica", nome: "Bateria 60Ah", descricao: "Selada - Partida garantida", preco: 350, icone: "🔋" }
+    ];
+
+    let carrinho = [];
+
+    // Carregar dados salvos
+    function carregarDados() {
+        const produtosSalvos = localStorage.getItem('produtos');
+        if (produtosSalvos) {
+            produtos = JSON.parse(produtosSalvos);
+        }
+        const carrinhoSalvo = localStorage.getItem('carrinho');
+        if (carrinhoSalvo) {
+            carrinho = JSON.parse(carrinhoSalvo);
+        }
+        atualizarTudo();
+    }
+
+    // Salvar produtos
+    function salvarProdutos() {
+        localStorage.setItem('produtos', JSON.stringify(produtos));
+    }
+
+    // Salvar carrinho
+    function salvarCarrinho() {
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    }
+
+    // Adicionar produto ao carrinho
+    function adicionarAoCarrinho(id) {
+        const produto = produtos.find(p => p.id === id);
+        const itemExistente = carrinho.find(item => item.id === id);
+        
+        if (itemExistente) {
+            itemExistente.quantidade++;
+        } else {
+            carrinho.push({
+                id: produto.id,
+                nome: produto.nome,
+                preco: produto.preco,
+                icone: produto.icone,
+                quantidade: 1
+            });
+        }
+        salvarCarrinho();
+        atualizarTudo();
+        mostrarPagina('carrinho');
+    }
+
+    // Remover do carrinho
+    function removerDoCarrinho(id) {
+        const index = carrinho.findIndex(item => item.id === id);
+        if (index !== -1) {
+            if (carrinho[index].quantidade > 1) {
+                carrinho[index].quantidade--;
+            } else {
+                carrinho.splice(index, 1);
+            }
+        }
+        salvarCarrinho();
+        atualizarTudo();
+    }
+
+    // Limpar carrinho
+    function limparCarrinho() {
+        carrinho = [];
+        salvarCarrinho();
+        atualizarTudo();
+    }
+
+    // Atualizar tudo (produtos, carrinho, contador)
+    function atualizarTudo() {
+        exibirProdutos();
+        exibirCarrinho();
+        atualizarContadorCarrinho();
+    }
+
+    // Exibir produtos na loja
+    function exibirProdutos() {
+        const grid = document.getElementById('produtosGrid');
+        if (!grid) return;
+        
+        if (produtos.length === 0) {
+            grid.innerHTML = '<p style="text-align:center;">Nenhum produto cadastrado. Vá em "CADASTRAR PEÇA" para adicionar!</p>';
+            return;
+        }
+
+        grid.innerHTML = '';
+        produtos.forEach(produto => {
+            const card = document.createElement('div');
+            card.className = 'produto-card';
+            card.innerHTML = `
+                <div class="icone">${produto.icone}</div>
+                <div class="tipo">${produto.tipo}</div>
+                <div class="nome">${produto.nome}</div>
+                <div class="descricao" style="font-size:0.8rem; color:#ccc;">${produto.descricao}</div>
+                <div class="preco">R$ ${produto.preco.toFixed(2)}</div>
+                <button onclick="adicionarAoCarrinho(${produto.id})">➕ Adicionar ao Carrinho</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Exibir carrinho
+    function exibirCarrinho() {
+        const container = document.getElementById('carrinhoItems');
+        const totalContainer = document.getElementById('totalCarrinho');
+        
+        if (carrinho.length === 0) {
+            container.innerHTML = '<p style="text-align:center;">🛒 Carrinho vazio. Adicione produtos!</p>';
+            totalContainer.innerHTML = 'Total: R$ 0,00';
+            return;
+        }
+
+        let html = '';
+        let total = 0;
+        
+        carrinho.forEach(item => {
+            const subtotal = item.preco * item.quantidade;
+            total += subtotal;
+            html += `
+                <div class="carrinho-item">
+                    <div>
+                        <span style="font-size:1.5rem;">${item.icone}</span>
+                        <strong>${item.nome}</strong><br>
+                        <small>R$ ${item.preco.toFixed(2)} cada</small>
+                    </div>
+                    <div>
+                        <button onclick="removerDoCarrinho(${item.id})">-</button>
+                        <span style="margin:0 10px;">x${item.quantidade}</span>
+                        <button onclick="adicionarAoCarrinho(${item.id})">+</button>
+                        <div>R$ ${subtotal.toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+        totalContainer.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+    }
+
+    // Atualizar contador do carrinho no menu
+    function atualizarContadorCarrinho() {
+        const count = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
+        const span = document.getElementById('carrinhoCount');
+        if (span) span.innerText = count;
+    }
+
+    // Finalizar pedido no WhatsApp
+    function finalizarPedido() {
+        if (carrinho.length === 0) {
+            alert('Carrinho vazio! Adicione produtos antes de finalizar.');
+            return;
+        }
+        
+        let mensagem = 'Olá Joazinho! Gostaria de fazer um pedido:%0a%0a';
+        mensagem += '📋 *MEU PEDIDO:*%0a';
+        
+        carrinho.forEach(item => {
+            const subtotal = item.preco * item.quantidade;
+            mensagem += `• ${item.nome} x${item.quantidade} = R$ ${subtotal.toFixed(2)}%0a`;
+        });
+        
+        const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+        mensagem += `%0a💰 *TOTAL: R$ ${total.toFixed(2)}*%0a%0a`;
+        mensagem += '🚗 Poderia me ajudar com esse pedido? Agradeço desde já!';
+        
+        const numero = '5544999364735';
+        window.open(`https://wa.me/${numero}?text=${mensagem}`, '_blank');
+    }
+
+    // Cadastrar novo produto
+    function cadastrarProduto(event) {
+        event.preventDefault();
+        
+        const tipo = document.getElementById('tipo').value;
+        const nome = document.getElementById('nome').value.trim();
+        const descricao = document.getElementById('descricao').value.trim();
+        const preco = parseFloat(document.getElementById('preco').value);
+        const icone = document.getElementById('icone').value.trim();
+        
+        if (!tipo || !nome || !descricao || isNaN(preco) || preco <= 0) {
+            alert('Preencha todos os campos corretamente!');
+            return;
+        }
+        
+        const novoId = produtos.length > 0 ? Math.max(...produtos.map(p => p.id)) + 1 : 1;
+        
+        const novoProduto = {
+            id: novoId,
+            tipo: tipo,
+            nome: nome,
+            descricao: descricao,
+            preco: preco,
+            icone: icone || '🔧'
+        };
+        
+        produtos.push(novoProduto);
+        salvarProdutos();
+        atualizarTudo();
+        
+        // Limpar formulário
+        document.getElementById('formCadastro').reset();
+        
+        alert(`✅ Peça "${nome}" cadastrada com sucesso!`);
+        mostrarPagina('loja');
+    }
+
+    // Mostrar página ativa
+    function mostrarPagina(pagina) {
+        document.getElementById('paginaLoja').classList.remove('ativa');
+        document.getElementById('paginaCadastro').classList.remove('ativa');
+        document.getElementById('paginaCarrinho').classList.remove('ativa');
+        
+        if (pagina === 'loja') document.getElementById('paginaLoja').classList.add('ativa');
+        if (pagina === 'cadastro') document.getElementById('paginaCadastro').classList.add('ativa');
+        if (pagina === 'carrinho') document.getElementById('paginaCarrinho').classList.add('ativa');
+    }
+
+    // Eventos
+    document.getElementById('formCadastro').addEventListener('submit', cadastrarProduto);
+    
+    // Inicializar
+    carregarDados();
+</script>
+
+</body>
+</html>
